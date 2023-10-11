@@ -4,7 +4,6 @@ const router = express.Router();
 const voteController = require('../controllers/voteController');
 
 
-// /votes
 router
     .route('/votes/:id_musique')
     .get(voteController.listAllVotes)
@@ -21,7 +20,7 @@ router
     .get(voteController.getMusiqueVoteResult)
 
 router
-    .route('/votes')
+    .route('/votes/resultat')
     .get(voteController.getAllVotes)
 
 

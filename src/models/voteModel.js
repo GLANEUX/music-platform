@@ -2,12 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
-let voteSchema = new Schema ({
+let voteSchema = new Schema({
     vote: {
-        type : Number,
+        type: Number,
         required: true,
-        min: 1, 
-        max: 5
+        min : [0, "Le vote doit être supérieur ou égale à 0"],
+        max: [5, "Le vote doit être inférieur ou égle à 5"],
+        get: v => Math.floor(v),
+        set: v => Math.floor(v)        
     },
     created_at: {
         type: Date,
@@ -18,6 +20,4 @@ let voteSchema = new Schema ({
     }
 });
 
-
 module.exports = mongoose.model('Vote', voteSchema);
-

@@ -28,12 +28,11 @@ exports.getAVote = async (req, res) =>{
 
 exports.createAVote = async (req, res) => {
     try {
-        // Vérifier si la musique existe avant de créer le vote
         const musique = await Musique.findById(req.params.id_musique);
 
         if (!musique) {
             res.status(404).json({ message: 'Musique introuvable' });
-            return; // Sortir de la fonction
+            return;
         }
 
         const newVote = new Vote({ ...req.body, musique_id: req.params.id_musique });
@@ -94,7 +93,6 @@ exports.getMusiqueVoteResult = async (req, res) => {
             return;
         }
 
-        // Calcul du total des points
         const totalPoints = votes.reduce((acc, vote) => acc + vote.vote, 0);
 
         res.status(200).json({ totalPoints });
@@ -129,10 +127,8 @@ exports.getAllVotes = async (req, res) => {
             return;
         }
 
-        // Récupérez l'ID de la musique la plus votée
         const mostVotedMusicId = result[0]._id;
 
-        // Recherchez les détails de la musique la plus votée dans la collection Musique
         const mostVotedMusic = await Musique.findById(mostVotedMusicId);
 
         res.status(200).json({ mostVotedMusic, totalVotes: result[0].totalVotes });
