@@ -11,4 +11,12 @@ router
     .post(musiqueController.createAMusique)
 
 
+router
+    .route('/:id_musique')
+    .delete(musiqueController.deleteAMusique)
+    .get(musiqueController.getAMusique)
+    .put(musiqueController.updateAMusique)
+
+
+
 module.exports = router;
