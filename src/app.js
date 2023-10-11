@@ -13,4 +13,8 @@ app.use(express.json());
 const musiqueRoute = require('./routes/musiqueRoute');
 app.use('/musiques', musiqueRoute);
 
+
+const voteRoute = require('./routes/voteRoute');
+app.use('/', voteRoute);
+
 app.listen(port,host);
