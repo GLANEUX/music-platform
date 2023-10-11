@@ -81,3 +81,63 @@ exports.updateAVote = async (req, res) =>{
         res.status(500).json({ message: 'Erreur serveur (updateAVote)' });
     }
 }
+
+
+
+
+
+exports.getMusiqueVoteResult = async (req, res) => {
+    try {
+        const votes = await Vote.find({ musique_id: req.params.id_musique });
+        if (votes.length === 0) {
+            res.status(404).json({ message: 'Aucun vote trouvé pour cette musique' });
+            return;
+        }
+
+        // Calcul du total des points
+        const totalPoints = votes.reduce((acc, vote) => acc + vote.vote, 0);
+
+        res.status(200).json({ totalPoints });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Erreur serveur (getMusiqueVoteResult)' });
+    }
+}
+
+
+
+
+exports.getAllVotes = async (req, res) => {
+    try {
+        const result = await Vote.aggregate([
+            {
+                $group: {
+                    _id: "$musique_id",
+                    totalVotes: { $sum: "$vote" }
+                }
+            },
+            {
+                $sort: { totalVotes: -1 }
+            },
+            {
+                $limit: 1
+            }
+        ]);
+
+        if (result.length === 0) {
+            res.status(404).json({ message: 'Aucune musique trouvée' });
+            return;
+        }
+
+        // Récupérez l'ID de la musique la plus votée
+        const mostVotedMusicId = result[0]._id;
+
+        // Recherchez les détails de la musique la plus votée dans la collection Musique
+        const mostVotedMusic = await Musique.findById(mostVotedMusicId);
+
+        res.status(200).json({ mostVotedMusic, totalVotes: result[0].totalVotes });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Erreur serveur (getMostVotedMusic)' });
+    }
+};
