@@ -8,6 +8,7 @@ const musiqueController = require('../controllers/musiqueController');
 router
     .route('/')
     .get(musiqueController.listAllMusiques)
+    .post(musiqueController.createAMusique)
 
 
 module.exports = router;
